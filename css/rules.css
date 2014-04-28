@@ -2,6 +2,8 @@
 
 
 body{
+    background: url('../img/hardwoodfloorpic.jpg') no-repeat;
+    background-size: cover;
     margin:0;
 }
 
