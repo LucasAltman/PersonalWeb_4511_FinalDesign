@@ -1,0 +1,61 @@
+
+
+
+body{
+    margin:0;
+}
+
+#outercontainer{
+    width:960px;
+    height:980px;
+    background-color: #363636;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius:10px;
+}
+
+#container{
+
+    width:98%;
+    height:98%;
+    background-color:#F1F1D4;
+    margin-left:auto;
+    margin-right:auto;
+    opacity:0.95;
+}
+
+header{
+    width:100%;
+    min-height:150px;
+    background-color:black;
+}
+
+#headertext{
+    color:#F1F1D4;
+    text-align:center;
+    position:relative;
+    top:30px;
+
+}
+
+#maincontent{
+
+}
+
+.navbar{
+    position:relative;
+    top:50px;
+}
+
+#homepagepicture{
+    float:right;
+}
+#homepageparagraph{
+    position:relative;
+}
+
+.prettyprint{
+    max-height:680px;
+    overflow:scroll;
+}
+

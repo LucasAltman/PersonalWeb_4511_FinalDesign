@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Code Examples</title>
+    <link rel="stylesheet" href="./css/rules.css" type="text/css" />
+    <link rel="stylesheet" href="./css/bootstrap.css" type="text/css"/>
+    <link rel="stylesheet" href="./css/prettify.css" type="text/css"/>
+    <script type="text/javascript" src="./js/prettify.js"></script>
+    <script type="text/javascript" src="./js/lang-powershell.js"></script>
+
+
+</head>
+
+
+<body onload="prettyPrint()">
+<div id="outercontainer">
+    <div id="container">
+        <header>
+            <h1 id="headertext">Lucas Altman</h1>
+            <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            <li><a href="index.html">Home</a></li>
+                            <li class="active"><a href="./code.html">Code Examples</a></li>
+                            <li><a href="./design.html">Design Gallery</a></li>
+                            <li><a href="./contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section id="maincontent">
+            <h2>Code Examples</h2>
+            <h3 style="text-decoration: underline">Dell Warranty Info - Powershell Script</h3>
+            <p>
+            This is a Powershell script that I wrote for the The Ohio State University Libraries, when I did an internship in the autumn of 2013.
+            </p>
+
+            <pre class="prettyprint">
+                <# Dell Warranty Info Script
+                        12-9-2013
+                        Lucas Altman
+                        Pulls in from a CSV containing first column hostname and second column service tag
+                        makes connection to the Dell assetservice webservice, grabs warranty info, parses it for
+                        system type and model, Warranty end date(s), then
+                        sticks all that in an excel file and applies minimal formatting.
+
+                        Directions: Put a CSV file with the a column named servicetag and a column named hostname (you can change the column names, look down this file for a convention). Double click and run,
+                        and it'll open an Excel window, and begin processing the information into the excel file. After it finishes, the script will save the file in its directory with the naming convention of
+                        "WarrantyInfo-ExcelResults-MM-DD-YYYY-H.mm.ss.xlsx"
+
+
+
+                        #>
+
+
+                    #open excel and get a new book, new sheet, and assign cells to a variable.
+                    $objExcel=new-object -comobject excel.application
+                    $objExcel.Visible = $True ##comment this out if you want the excel window to run in the background, out of sight
+                    $objWorkbook = $objExcel.Workbooks.Add()
+                    $objWorksheet = $objWorkbook.ActiveSheet
+                    $objcells = $objworksheet.Cells
+
+                    #fill in headers
+                    $col=2
+                    "Hostname","Service Tag","System Model","Warranty 1 End Date","Warranty 2 End Date","Warranty 3 End Date" | foreach {
+                    $objcells.item(3,$col)=$_
+                    $objcells.item(3,$col).font.bold=$True
+                    $col++
+                    }
+
+
+                    #row number starts at 4 and doesnt reset, re-declare column inside loop so it resets
+                    $row=4
+                    #import CSV of host names and tags
+                    $hostandtaglist=Import-CSV "./Hostname_ServiceTag.csv" ##Convention: "./<name_of_CSV_File>"
+                    $WebProxy=New-WebServiceProxy -Uri http://xserv.dell.com/services/assetservice.asmx
+                    foreach ($entry in $hostandtaglist) {
+                    $col = 2 #gives you a column on the left so it looks nicer
+                    $tag = $entry.servicetag ##The convention is $entry.<name_of_servicetag_column_in_CSV_file>
+                        $name = $entry.hostname ##Convention: $entry.<Name_of_hostname_column_in_CSV_file>
+
+                        #attach the webservice
+                        $info=$WebProxy.GetAssetInformation(([guid]::NewGuid()).Guid,"Dell warranty",$tag)
+
+                        #write hostname to excel file, then increment col number
+                        $objcells.item($row,$col)=$name
+                        $col++
+
+                        #write service tag to excel file, then increment col number
+                        $objcells.item($row,$col)=$tag
+                        $col++
+
+                        #write Computer model to excel file, then increment col number
+                        $type=$info[0].AssetHeaderData.SystemType
+                        $model=$info[0].AssetHeaderData.SystemModel
+                        $objcells.item($row,$col)="$type $model"
+                        $col++
+
+
+                        #Warranty Dates
+                        #For warranty dates, start on this column and increment inside a foreach loop
+                        ####this probably could be done logically cleaner with just a for loop
+                        $number=0
+                        foreach($waritem in $info[0].Entitlements)
+                        {
+                        $enddate=$info[0].Entitlements[$number].EndDate
+                        $objcells.item($row,$col)="$enddate"
+                        $col++
+                        $number++
+                        }
+
+                        $row++
+
+                        }
+                        #end CSV foreach
+                        #format the excel sheet so it autofits the columns
+                        $objworksheet.columns.item("B:R").EntireColumn.AutoFit() | out-null
+
+                        #get current date for filename
+                        $date=Get-Date -format M-d-yyyy-H.mm.ss
+                        #declare results filename; includes the date
+                        $filepath= "./WarrantyInfo-ExcelResults-$date.xlsx"
+                        #save the results file
+                        $objworkbook.SaveAs($filepath)
+                        write-output "**********Script Execution Complete******************"
+            </pre>
+
+        </section>
+
+    </div>
+</div>
+
+
+
+
+
+
+<!-- SCRIPTS This time for Google prettify-->
+<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+
+</body>
+</html>
