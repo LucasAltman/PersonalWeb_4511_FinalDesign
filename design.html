@@ -5,8 +5,9 @@
     <title>Design Gallery</title>
     <link rel="stylesheet" href="./css/rules.css" type="text/css" />
     <link rel="stylesheet" href="./css/bootstrap.css" type="text/css"/>
-    <link rel="stylesheet" href="./css/blueimp-gallery.min.css">
-    <link rel="stylesheet" href="./css/bootstrap-image-gallery.min.css">
+    <link rel="stylesheet" href="./css/altmangallery.css" type="text/css"/>
+    <link rel="stylesheet" href="./css/blueimp-gallery.min.css" type="text/css"/>
+    <link rel="stylesheet" href="./css/bootstrap-image-gallery.min.css" type="text/css"/>
 
 </head>
 
@@ -39,23 +40,93 @@
         </header>
 
         <section id="maincontent">
-            <h2 style="text-align: center">Design Gallery</h2>
-            <h4 style="text-align: center"> These are my design projects for Communications 2511: Visual Communication Design, at the Ohio State University</h4>
+            <h2 class="center">Design Gallery</h2>
+            <h4 class="center"> These are my design projects for Communications 2511: Visual Communication Design, at the Ohio State University</h4>
+            <div id="links">
+                <div class="row center-block" style="position:relative; left:17px;" >
+                    <div class="galitem col-md-4">
+                        <h5 class="center">About Me</h5>
+                        <a href="img/designs/Lucas_Altman_About_Me_Final.jpg" title="About Me" data-gallery>
+                            <img src="img/thumbnails/Lucas_Altman_About_Me_Final_thumb.jpg" alt="About Me">
+                        </a>
+                    </div>
+
+                    <div class="galitem col-md-4">
+                        <h5 class="center">Logo</h5>
+                        <a></a>
+                    </div>
+
+                    <div class="galitem col-md-4">
+                        <h5 class="center">Logo</h5>
+                        <a></a>
+                    </div>
+                </div>
+
+                <div class="row center-block" style="position:relative; left:17px;">
+                    <div class="galitem col-md-6">
+                        <h5 class="center">About Me</h5>
+                        <a></a>
+                    </div>
+
+                    <div class="galitem col-md-6">
+                        <h5 class="center">Logo</h5>
+                        <a></a>
+                    </div>
+                </div>
+            </div>
 
 
         </section>
 
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-
+<!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
+<div id="blueimp-gallery" class="blueimp-gallery">
+    <!-- The container for the modal slides -->
+    <div class="slides"></div>
+    <!-- Controls for the borderless lightbox -->
+    <h3 class="title"></h3>
+    <a class="prev">‹</a>
+    <a class="next">›</a>
+    <a class="close">×</a>
+    <a class="play-pause"></a>
+    <ol class="indicator"></ol>
+    <!-- The modal dialog, which will be used to wrap the lightbox content -->
+    <div class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body next"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left prev">
+                        <i class="glyphicon glyphicon-chevron-left"></i>
+                        Previous
+                    </button>
+                    <button type="button" class="btn btn-primary next">
+                        Next
+                        <i class="glyphicon glyphicon-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="./js/jquery-2.1.0.js"></script>
+<script src="./js/jquery.blueimp-gallery.min.js"></script>
+<script src="./js/bootstrap-image-gallery.min.js"></script>
+<script>
+    document.getElementById('links').onclick = function (event) {
+        event = event || window.event;
+        var target = event.target || event.srcElement,
+                link = target.src ? target.parentNode : target,
+                options = {index: link, event: event},
+                links = this.getElementsByTagName('a');
+        blueimp.Gallery(links, options);
+    };
+</script>
 </body>
 </html>

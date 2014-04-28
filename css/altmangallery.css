@@ -1,0 +1,14 @@
+
+.galitem{
+    height:300px;
+    width: 250px;
+    border-right: 1px solid #777777;
+    border-left: 1px solid #aeaeae;
+    border-bottom: 1px solid #777777;
+    border-top: 1px solid #777777;
+    box-shadow: 10px 10px 5px #888888;
+    background-color:#F1F1D4;
+    margin:15px;
+}
+
+
